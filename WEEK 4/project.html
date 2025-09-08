@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CGPA Sem Calculator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2980b9, #6dd5fa, #ffffff);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      margin: 0;
+      padding: 0;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 50px auto;
+      background-color: #ffffffcc;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-top: 20px;
+      color: #2c3e50;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      color: #34495e;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .result {
+      margin-top: 25px;
+      font-size: 20px;
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    .grade {
+      font-weight: bold;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>CGPA Sem Calculator</h1>
+
+  <form id="cgpaForm">
+    <div class="section-title">Internal Marks (60% Weightage)</div>
+    <label for="insem1">InSem 1</label>
+    <input type="number" id="insem1" min="0" max="100" required>
+
+    <label for="insem2">InSem 2</label>
+    <input type="number" id="insem2" min="0" max="100" required>
+
+    <label for="intQuiz">Internal Quiz</label>
+    <input type="number" id="intQuiz" min="0" max="100" required>
+
+    <div class="section-title">External Marks (40% Weightage)</div>
+    <label for="endSem">End Semester</label>
+    <input type="number" id="endSem" min="0" max="100" required>
+
+    <label for="extQuiz">External Quiz</label>
+    <input type="number" id="extQuiz" min="0" max="100" required>
+
+    <button type="button" onclick="calculateCGPA()">Calculate CGPA</button>
+  </form>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+  function calculateCGPA() {
+    // Fetch values
+    const insem1 = parseFloat(document.getElementById("insem1").value);
+    const insem2 = parseFloat(document.getElementById("insem2").value);
+    const intQuiz = parseFloat(document.getElementById("intQuiz").value);
+    const endSem = parseFloat(document.getElementById("endSem").value);
+    const extQuiz = parseFloat(document.getElementById("extQuiz").value);
+
+    // Validate
+    const marks = [insem1, insem2, intQuiz, endSem, extQuiz];
+    if (marks.some(mark => isNaN(mark) || mark < 0 || mark > 100)) {
+      document.getElementById("result").innerHTML = "Please enter all marks between 0 and 100.";
+      return;
+    }
+
+    // Internal and External Averages
+    const internalAvg = (insem1 + insem2 + intQuiz) / 3;
+    const externalAvg = (endSem + extQuiz) / 2;
+
+    // Final weighted score (out of 100)
+    const finalScore = (internalAvg * 0.6) + (externalAvg * 0.4);
+
+    // Convert to CGPA out of 10
+    const cgpa = (finalScore / 100) * 10;
+
+    // Grade logic
+    let grade;
+    if (cgpa >= 9.0) grade = "A+";
+    else if (cgpa >= 8.0) grade = "A";
+    else if (cgpa >= 7.0) grade = "B+";
+    else if (cgpa >= 6.0) grade = "B";
+    else if (cgpa >= 5.0) grade = "C";
+    else if (cgpa >= 4.0) grade = "D";
+    else grade = "F";
+
+    // Output
+    document.getElementById("result").innerHTML = `
+      Your CGPA for this semester is: <span class="grade">${cgpa.toFixed(2)}</span><br>
+      Grade: <span class="grade">${grade}</span>
+    `;
+  }
+</script>
+
+</body>
+</html>
